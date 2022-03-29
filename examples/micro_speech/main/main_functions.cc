@@ -157,6 +157,7 @@ void loop() {
 
   // Obtain a pointer to the output tensor
   TfLiteTensor* output = interpreter->output(0);
+  printf("%d, %d, %d, %d\n", output->data.int8[0], output->data.int8[1], output->data.int8[2], output->data.int8[3]);
   // Determine whether a command was recognized based on the output of inference
   const char* found_command = nullptr;
   uint8_t score = 0;
