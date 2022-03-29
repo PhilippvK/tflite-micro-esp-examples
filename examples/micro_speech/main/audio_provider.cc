@@ -75,8 +75,8 @@ static void i2s_init(void) {
       .fixed_mclk = -1,
   };
   i2s_pin_config_t pin_config = {
-      .bck_io_num = 26,    // IIS_SCLK
-      .ws_io_num = 32,     // IIS_LCLK
+      .bck_io_num = 32,    // IIS_SCLK
+      .ws_io_num = 25,     // IIS_LCLK
       .data_out_num = -1,  // IIS_DSIN
       .data_in_num = 33,   // IIS_DOUT
   };
