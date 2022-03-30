@@ -143,7 +143,7 @@ class RecognizeCommands {
   //                            int32_t minimum_count = 3);
   explicit RecognizeCommands(int32_t average_window_duration_ms = 1000,
                              // uint8_t detection_threshold = 200,
-                             uint8_t detection_threshold = 120,
+                             uint8_t detection_threshold = 150,
                              int32_t suppression_ms = 1500,
                              int32_t minimum_count = 3);
 
