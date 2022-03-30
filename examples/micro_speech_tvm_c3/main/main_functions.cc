@@ -15,6 +15,8 @@ limitations under the License.
 
 #include "main_functions.h"
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "audio_provider.h"
 #include "command_responder.h"
 #include "feature_provider.h"
@@ -131,23 +133,28 @@ void setup() {
 // The name of this function is important for Arduino compatibility.
 void loop() {
   // Fetch the spectrogram for the current time.
+  uint32_t start1 = xTaskGetTickCount();
   const int32_t current_time = LatestAudioTimestamp();
   int how_many_new_slices = 0;
   // TfLiteStatus feature_status = feature_provider->PopulateFeatureData(
   //     error_reporter, previous_time, current_time, &how_many_new_slices);
   int feature_status = feature_provider->PopulateFeatureData(
       previous_time, current_time, &how_many_new_slices);
+  // printf("how_many_new_slices=%d\n", how_many_new_slices);
   if (feature_status != 0) {
     // TF_LITE_REPORT_ERROR(error_reporter, "Feature generation failed");
     printf("Feature generation failed\n");
     return;
   }
+  printf("current_time=%ld\n", current_time);
   previous_time = current_time;
   // If no new audio samples have been received since last time, don't bother
   // running the network model.
   if (how_many_new_slices == 0) {
     return;
   }
+  uint32_t end1 = xTaskGetTickCount();
+  printf("ticks1=%lu\n", end1-start1);
 
   // Copy feature buffer to input tensor
   for (int i = 0; i < kFeatureElementCount; i++) {
@@ -160,16 +167,21 @@ void loop() {
   //   TF_LITE_REPORT_ERROR(error_reporter, "Invoke failed");
   //   return;
   // }
+  uint32_t start2 = xTaskGetTickCount();
   TVMWrap_Run();
+  vTaskDelay(13);
+  uint32_t end2 = xTaskGetTickCount();
+  printf("ticks2=%lu\n", end2-start2);
 
   // Obtain a pointer to the output tensor
   // TfLiteTensor* output = interpreter->output(0);
   int8_t* output_ptr = (int8_t*)TVMWrap_GetOutputPtr(0);
-  printf("%4d, \t%d, \t%4d, \t%4d\n", output_ptr[0]+128, output_ptr[1]+128, output_ptr[2]+128, output_ptr[3]+128);
+  // printf("%4d, \t%d, \t%4d, \t%4d\n", output_ptr[0]+128, output_ptr[1]+128, output_ptr[2]+128, output_ptr[3]+128);
   // Determine whether a command was recognized based on the output of inference
   const char* found_command = nullptr;
   uint8_t score = 0;
   bool is_new_command = false;
+  uint32_t start3 = xTaskGetTickCount();
   // TfLiteStatus process_status = recognizer->ProcessLatestResults(
   //     output, current_time, &found_command, &score, &is_new_command);
   int process_status = recognizer->ProcessLatestResults(
@@ -187,4 +199,6 @@ void loop() {
   //                  is_new_command);
   RespondToCommand(current_time, found_command, score,
                    is_new_command);
+  uint32_t end3 = xTaskGetTickCount();
+  printf("ticks3=%lu\n", end3-start3);
 }
