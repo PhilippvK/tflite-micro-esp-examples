@@ -1,13 +1,12 @@
 // This file is generated. Do not edit.
-// Generated on: 2022-03-25 08:11:14.084409
+// Generated on: 2022-03-29 12:34:12.900601
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <stdarg.h>
 #include <dlpack/dlpack.h>
 #include "tvm/runtime/c_runtime_api.h"
 #include "tvm/runtime/crt/stack_allocator.h"
-// #include "printing.h"
+#include "printing.h"
 #include "tvmgen_default.h"
 
 
@@ -15,18 +14,18 @@
 char input0_data[1960];
 void* inputs[] = {input0_data};
 struct tvmgen_default_inputs tvmgen_default_inputs = {
-    .Reshape_1 = input0_data,
+    .input = input0_data,
 };
 char output0_data[4];
 void* outputs[] = {output0_data};
 struct tvmgen_default_outputs tvmgen_default_outputs = {
-    .labels_softmax = output0_data,
+    .Identity = output0_data,
 };
 
 void TVMLogf(const char* msg, ...) {
     va_list args;
     va_start(args, msg);
-    printf(msg, args);
+    DBGPRINTF(msg, args);
     va_end(args);
 }
 
@@ -65,7 +64,6 @@ size_t TVMWrap_GetNumInputs()
 
 void TVMWrap_Run()
 {
-    // printf("TVMWrap_Run\n");
     int ret_val = tvmgen_default_run(&tvmgen_default_inputs, &tvmgen_default_outputs);
     if (ret_val) {
         TVMPlatformAbort(kTvmErrorPlatformCheckFailure);

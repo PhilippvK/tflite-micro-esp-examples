@@ -10,14 +10,14 @@ extern "C" {
  * \brief Input tensor pointers for TVM module "default" 
  */
 struct tvmgen_default_inputs {
-  void* Reshape_1;
+  void* input;
 };
 
 /*!
  * \brief Output tensor pointers for TVM module "default" 
  */
 struct tvmgen_default_outputs {
-  void* labels_softmax;
+  void* Identity;
 };
 
 /*!
