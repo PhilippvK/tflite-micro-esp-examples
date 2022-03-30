@@ -5,7 +5,7 @@
 #include <stdarg.h>
 #include <dlpack/dlpack.h>
 #include "tvm/runtime/c_runtime_api.h"
-#include "tvm/runtime/crt/stack_allocator.h"
+#include "tvm/runtime/crt/error_codes.h"
 #include "printing.h"
 #include "tvmgen_default.h"
 
